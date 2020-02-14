@@ -8,24 +8,16 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v2
-      with: 
-        path: jiffty
-    - uses: actions/checkout@v2
-      with:
-        repository: erlang/rebar3
-        path: rebar3
+    - uses: actions/checkout@v1
     - name: run eunit
       run: |
         set-executionpolicy remotesigned -s cu
         iex (new-object net.webclient).downloadstring('https://get.scoop.sh')
         scoop install erlang
         $env:path + ";" + $env:USERPROFILE + "\scoop\shims"
-        cd rebar3
-        ./bootstrap 
-        rebar3
-        $env:path + ";" + $(pwd)
-        cd ../jiffty 
+        $webClient = New-Object System.Net.WebClient
+        $webClient.DownloadString('https://raw.githubusercontent.com/emqx/emqx-rel/master/rebar3.cmd') > ./rebar3.cmd
+        $webClient.DownloadString('https://raw.githubusercontent.com/emqx/emqx-rel/master/rebar3') > ./rebar3
         rebar3 eunit
 
   mac:
