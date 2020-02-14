@@ -13,8 +13,7 @@ jobs:
       run: |
         set-executionpolicy remotesigned -s cu
         iex (new-object net.webclient).downloadstring('https://get.scoop.sh')
-        scoop install sudo 
-        sudo scoop install erlang
+        scoop install erlang
         $env:path + ";" + $env:USERPROFILE + "\scoop\shims"
         $webClient = New-Object System.Net.WebClient
         $webClient.DownloadString('https://s3.amazonaws.com/rebar3/rebar3') > ./rebar3
