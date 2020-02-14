@@ -21,9 +21,10 @@ jobs:
         iex (new-object net.webclient).downloadstring('https://get.scoop.sh')
         scoop install erlang
         $env:path + ";" + $env:USERPROFILE + "\scoop\shims"
-        cd rebar3 && ./bootstrap && cd -
-        $env:path + ";" + $(pwd) + "\rebar3"
-        cd jiffty 
+        cd rebar3
+        ./bootstrap 
+        $env:path + ";" + $(pwd)
+        cd ../jiffty 
         rebar3 eunit
 
   mac:
@@ -38,9 +39,9 @@ jobs:
         echo "/usr/local/bin:$PATH" >> ~/.bashrc
     - name: install rebar3
       run: |
-        curl -fsSL -o rebar3 https://s3.amazonaws.com/rebar3/rebar3
-        sudo mv rebar3 /usr/bin/rebar3
-        sudo chmod +x /usr/bin/rebar3
+        curl -fsSL -o /usr/local/bin/rebar3 https://s3.amazonaws.com/rebar3/rebar3
+        chmod +x /usr/local/bin/rebar3
+        echo "/usr/local/bin:$PATH" >> ~/.bashrc
     - name: run eunit
       run: |
         rebar3 eunit
