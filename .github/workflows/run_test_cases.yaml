@@ -15,17 +15,14 @@ jobs:
       with:
         repository: erlang/rebar3
         path: rebar3
-    - name: build rebar3
-      run: |
-       cd rebar3
-       ./bootstrap
     - name: run eunit
       run: |
         set-executionpolicy remotesigned -s cu
         iex (new-object net.webclient).downloadstring('https://get.scoop.sh')
         scoop install erlang
         $env:path + ";" + $env:USERPROFILE + "\scoop\shims"
-        $env:path + ";" + $env:USERPROFILE + "\rebar3"
+        cd rebar3 && ./bootstrap && cd -
+        $env:path + ";" + $(pwd) + "\rebar3"
         cd jiffty 
         rebar3 eunit
 
@@ -41,7 +38,8 @@ jobs:
         echo "/usr/local/bin:$PATH" >> ~/.bashrc
     - name: install rebar3
       run: |
-        sudo curl -fsSL -o /usr/bin/rebar3 https://s3.amazonaws.com/rebar3/rebar3
+        curl -fsSL -o rebar3 https://s3.amazonaws.com/rebar3/rebar3
+        sudo mv rebar3 /usr/bin/rebar3
         sudo chmod +x /usr/bin/rebar3
     - name: run eunit
       run: |
@@ -83,5 +81,7 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: run eunit
-      run: docker run -i --name alpine -v $(pwd):/jiffty erlang:22.1-alpine sh -c "cd /jiffty && rebar3 eunit"
+      env:
+        ERL_OTP: erl22.1
+      run: docker run -i --name alpine -v $(pwd):/jiffty emqx/build-env:$ERL_OTP-alpine3.10-amd64 sh -c "cd /jiffty && rebar3 eunit"
     
