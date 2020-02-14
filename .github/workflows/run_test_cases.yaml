@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
 
-windows:
+  windows:
     runs-on: windows-latest
 
     steps:
