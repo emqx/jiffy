@@ -23,7 +23,7 @@ jobs:
         $env:path + ";" + $env:USERPROFILE + "\scoop\shims"
         cd rebar3
         ./bootstrap 
-        $env:path + ";" + $(pwd)
+        $env:path + ";" + $(pwd) + "\rebar3"
         cd ../jiffty 
         rebar3 eunit
 
